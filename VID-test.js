@@ -47,7 +47,7 @@ client.on('initialized', function () {
   const lyriqProjectId = "893b9ec8-fa3d-42a6-8cbd-7e6c6632c513";
   // const lyriqProjectId = "c670cc78-584e-4e71-b9b9-3bcf0fae12cf";
   // const lyriqProjectId = "c96976fd-9136-4381-aae5-2fe69b212b06";
-  const targetSelector = '.transitionGroupSlides';
+  const targetSelector = '#configurator-gallery';
   const targetSelectorFull = '.swiper';
   const paramsSelector = '.transitionGroupSlides img';
 

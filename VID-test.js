@@ -200,8 +200,10 @@ client?.on('initialized', async function () {
     // const lyriqProjectId = "8147d2cd-ecd7-4195-bb0c-1a5bfa8cadfc";
     // const lyriqProjectId = "893b9ec8-fa3d-42a6-8cbd-7e6c6632c513";
     // const lyriqProjectId = "c670cc78-584e-4e71-b9b9-3bcf0fae12cf";
-    const urlProjectId = new URLSearchParams(window.location.search).get('projectId');
+    const urlProjectId = new URLSearchParams(window.location.search).get('projectid');
+    console.log('urlProjectId', urlProjectId);
     const lyriqProjectId = urlProjectId || 'c96976fd-9136-4381-aae5-2fe69b212b06';
+    console.log('lyriqProjectId', lyriqProjectId);
     // const targetSelector = '.transitionGroupSlides';
     const targetSelector = '#configurator-gallery';
     const targetSelectorFull = '.swiper';
@@ -487,7 +489,7 @@ client?.on('initialized', async function () {
           ],
         }); // Initial call to set up the player
         // loadingOVerlay._restoreInert();
-        console.log('Time to experience', (Date.now() - timeStrart)/1000, 'seconds');
+        console.log('Time to experience', (Date.now() - timeStrart)/1000, 'seconds ', lyriqProjectId);
       };
 
       startPlayer();

@@ -200,9 +200,10 @@ client?.on('initialized', async function () {
     // const lyriqProjectId = "8147d2cd-ecd7-4195-bb0c-1a5bfa8cadfc";
     // const lyriqProjectId = "893b9ec8-fa3d-42a6-8cbd-7e6c6632c513";
     // const lyriqProjectId = "c670cc78-584e-4e71-b9b9-3bcf0fae12cf";
+    const lyriqVProjectId = "882d52ae-e329-441a-a4fc-cc80dc47c54c";
     const urlProjectId = new URLSearchParams(window.location.search).get('projectid');
     console.log('urlProjectId', urlProjectId);
-    const lyriqProjectId = urlProjectId || 'c96976fd-9136-4381-aae5-2fe69b212b06';
+    const lyriqProjectId = urlProjectId || (model === 'lyriq-v' && lyriqVProjectId) ||'c96976fd-9136-4381-aae5-2fe69b212b06';
     console.log('lyriqProjectId', lyriqProjectId);
     // const targetSelector = '.transitionGroupSlides';
     const targetSelector = '#configurator-gallery';
@@ -475,19 +476,19 @@ client?.on('initialized', async function () {
       const startPlayer = async () => {
         console.log('clientexperienceplayer', ClientExperiencePlayer);
         player = await ClientExperiencePlayer.create(lyriqProjectId, follower, {
-          baseUrl: 'https://VEDO-public-dev.musea2.azure.ext.gm.com/delivery',
+          baseUrl: 'https://vedo.gm.com/delivery',
         });
         console.log('player created');
         await player.renderExperience('3D');
         console.log('experience rendered', player);
-        await player.vehicleConfiguration.changeVehicleConfiguration({
-          changes: [
-            {
-              optionCode: '6MH26_1SE',
-              action: 'SELECT',
-            },
-          ],
-        }); // Initial call to set up the player
+        // await player.vehicleConfiguration.changeVehicleConfiguration({
+        //   changes: [
+        //     {
+        //       optionCode: '6MH26_1SE',
+        //       action: 'SELECT',
+        //     },
+        //   ],
+        // }); // Initial call to set up the player
         // loadingOVerlay._restoreInert();
         console.log('Time to experience', (Date.now() - timeStrart)/1000, 'seconds ', lyriqProjectId);
       };

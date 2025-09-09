@@ -476,7 +476,7 @@ client?.on('initialized', async function () {
       const startPlayer = async () => {
         console.log('clientexperienceplayer', ClientExperiencePlayer);
         player = await ClientExperiencePlayer.create(lyriqProjectId, follower, {
-          baseUrl: 'https://vedo.gm.com/delivery',
+          baseUrl: 'https://vedo.apps.gmna.dev.krypton.atmosdt.gm.com/delivery',
         });
         console.log('player created');
         await player.renderExperience('3D');

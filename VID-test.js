@@ -1,5 +1,5 @@
 // import { ClientExperiencePlayer } from 'https://a200286d2stmain.blob.core.windows.net/frontends/vedo-poc/dist/vedo-experience-player.js';
-import { ClientExperiencePlayer } from 'https://a200286d2stmain.blob.core.windows.net/frontends/vedo-poc/v2/dist/vedo-experience-player.js';
+import { ClientExperiencePlayer } from 'https://a200286d2stmain.blob.core.windows.net/frontends/vedo-poc/v3/dist/vedo-experience-player.js';
 let timeStrart = Date.now();
 const style = document.createElement('style');
 style.textContent = `

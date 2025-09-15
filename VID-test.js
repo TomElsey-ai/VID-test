@@ -241,7 +241,7 @@ client?.on('initialized', async function () {
         zIndex: '9999999',
         transition: 'none',
         // border: 'red 3px solid',
-        backgroundColor: 'black',
+        // backgroundColor: 'black',
       });
       document.body.appendChild(container);
       follower = container;

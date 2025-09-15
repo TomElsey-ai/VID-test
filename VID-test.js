@@ -1,4 +1,3 @@
-// import { ClientExperiencePlayer } from 'https://a200286d2stmain.blob.core.windows.net/frontends/vedo-poc/dist/vedo-experience-player.js';
 import { ClientExperiencePlayer } from 'https://a200286d2stmain.blob.core.windows.net/frontends/vedo-poc/v3/dist/vedo-experience-player.js';
 let timeStrart = Date.now();
 const style = document.createElement('style');
@@ -91,6 +90,30 @@ const createLoadingOverlay = () => {
   return overlay;
 
 }
+
+const loadingStyle = document.createElement("style");
+loadingStyle.textContent = `
+  .loader {
+      width: 48px;
+      height: 48px;
+      border: 5px solid #FFF;
+      border-bottom-color: transparent;
+      border-radius: 50%;
+      display: inline-block;
+      box-sizing: border-box;
+      animation: rotation 1s linear infinite;
+      }
+
+      @keyframes rotation {
+      0% {
+          transform: rotate(0deg);
+      }
+      100% {
+          transform: rotate(360deg);
+      }
+    } 
+`;
+document.head.appendChild(loadingStyle);
   
 // let prevActive = null;
 // let prevOverflow = '';
@@ -219,6 +242,7 @@ client?.on('initialized', async function () {
         zIndex: '9999999',
         transition: 'none',
         // border: 'red 3px solid',
+        backgroundColor: 'black',
       });
       document.body.appendChild(container);
       follower = container;
@@ -481,14 +505,14 @@ client?.on('initialized', async function () {
         console.log('player created');
         await player.renderExperience('3D');
         console.log('experience rendered', player);
-        // await player.vehicleConfiguration.changeVehicleConfiguration({
-        //   changes: [
-        //     {
-        //       optionCode: '6MH26_1SE',
-        //       action: 'SELECT',
-        //     },
-        //   ],
-        // }); // Initial call to set up the player
+        await player.vehicleConfiguration.changeVehicleConfiguration({
+          changes: [
+            {
+              optionCode: '6MD26_1SM',
+              action: 'SELECT',
+            },
+          ],
+        }); // Initial call to set up the player
         // loadingOVerlay._restoreInert();
         console.log('Time to experience', (Date.now() - timeStrart)/1000, 'seconds ', lyriqProjectId);
       };

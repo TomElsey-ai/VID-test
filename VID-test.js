@@ -19,6 +19,7 @@ let currentImgNode = null;
 let lastURL = '';
 let VedoExperience = null;
 const configurationEngine = null;
+let viewChangebutton = null
 
 
 const clientSideId = '6780145a1ccd92099bb0fbb8';
@@ -75,6 +76,7 @@ const createLoadingOverlay = () => {
     left: '0',
     width: '100%',    
     height: '100%',
+    // backgroundColor: 'rgba(0, 0, 0, 0.5)',
     color: 'white',
     display: 'flex',  
     justifyContent: 'center',
@@ -113,6 +115,8 @@ loadingStyle.textContent = `
     } 
 `;
 document.head.appendChild(loadingStyle);
+
+// const 3Dbutton =
   
 // let prevActive = null;
 // let prevOverflow = '';
@@ -225,7 +229,7 @@ client?.on('initialized', async function () {
     const lyriqVProjectId = "882d52ae-e329-441a-a4fc-cc80dc47c54c";
     const urlProjectId = new URLSearchParams(window.location.search).get('projectid');
     console.log('urlProjectId', urlProjectId);
-    const lyriqProjectId = urlProjectId || (model === 'lyriq-v' && lyriqVProjectId) ||'c96976fd-9136-4381-aae5-2fe69b212b06';
+    const lyriqProjectId = urlProjectId || (model === 'lyriq-v' && lyriqVProjectId) ||'882d52ae-e329-441a-a4fc-cc80dc47c54c';
     console.log('lyriqProjectId', lyriqProjectId);
     // const targetSelector = '.transitionGroupSlides';
     const targetSelector = '#configurator-gallery';
@@ -239,13 +243,41 @@ client?.on('initialized', async function () {
       Object.assign(container.style, {
         position: 'fixed',
         zIndex: '9999999',
-        transition: 'none',
+        transition: 'opacity 0.5s ease-in-out',
         // border: 'red 3px solid',
-        // backgroundColor: 'black',
+        backgroundColor: '#ffffff',
       });
       document.body.appendChild(container);
       follower = container;
+      viewChangebutton = create3DViewButton();
     }
+
+    function create3DViewButton() {
+      const button = document.createElement('button');
+      button.textContent = '3D View';
+      button.style.position = 'fixed';
+      button.style.bottom = '32px';
+      button.style.left = '32px';
+      button.style.zIndex = '10000001';
+      button.style.padding = '12px 24px';
+      button.style.fontSize = '18px';
+      button.style.background = '#222';
+      button.style.color = '#fff';
+      button.style.border = 'none';
+      button.style.borderRadius = '8px';
+      button.style.cursor = 'pointer';
+      button.style['font-family'] = 'CadillacGothic-Regular, CadillacGothic-NarrowRegular, Arial, NanumSquare, sans-serif';
+      button.addEventListener('click', async () => {
+        console.log('3D View clicked');
+        if (player) {
+          await player.renderExperience('3D');
+        }
+      });
+      document.body.appendChild(button);
+      return button;
+    }
+
+    
 
     // === Sync follower VEDO container to target position and size ===
     function syncPosition() {
@@ -253,16 +285,19 @@ client?.on('initialized', async function () {
       const rect = target.getBoundingClientRect();
       const style = window.getComputedStyle(target);
       Object.assign(follower.style, {
-        top: `${rect.top}px`,
-        left: `${rect.left}px`,
-        width: `${rect.width}px`,
-        height: `${rect.height}px`,
-
-        paddingLeft: `${style.paddingLeft}`,
-        paddingTop: `${style.paddingTop}`,
-        paddingRight: `${style.paddingRight}`,
-        paddingBottom: `${style.paddingBottom}`,
+        top: `calc(${rect.top}px + ${style.paddingTop})`,
+        left: `calc(${rect.left}px + ${style.paddingLeft})`,
+        width: `calc(${rect.width}px - ${style.paddingLeft} - ${style.paddingRight})`,
+        height: `calc(${rect.height}px - ${style.paddingTop} - ${style.paddingBottom})`,
       });
+      // console.log('syncPosition', { rect, style, follower });
+      // if (viewChangebutton) {
+      //   Object.assign(viewChangebutton.style, {
+      //     bottom: `${rect.bottom}px`,
+      //     left: `${rect.left}px`,
+      //   });
+
+      // }
     }
 
     window.addEventListener('scroll', syncPosition);
@@ -295,8 +330,12 @@ client?.on('initialized', async function () {
       const element = document.getElementById('player-container');
       if (type === 'in') {
         element.style.visibility = 'visible';
+        element.style.opacity = '1';
       } else {
-        element.style.visibility = 'hidden';
+        element.style.opacity = '0';
+        setTimeout(() => {
+          element.style.visibility = 'hidden';
+        }, 500);
       }
     }
 
@@ -306,7 +345,7 @@ client?.on('initialized', async function () {
 
       if (!newImgNode || newImgNode === currentImgNode) return;
 
-      const newSrc = newImgNode.getAttribute('src');
+      const newSrc = newImgNode?.getAttribute('src');
       const oldSrc = currentImgNode?.getAttribute('src') || '';
 
       if (newSrc && oldSrc && newSrc !== oldSrc) {
@@ -502,18 +541,19 @@ client?.on('initialized', async function () {
           baseUrl: 'https://vedo.apps.gmna.dev.krypton.atmosdt.gm.com/delivery',
         });
         console.log('player created');
-        await player.renderExperience('3D');
+        await player.renderExperience('2D');
         console.log('experience rendered', player);
-        await player.vehicleConfiguration.changeVehicleConfiguration({
-          changes: [
-            {
-              optionCode: '6MD26_1SM',
-              action: 'SELECT',
-            },
-          ],
-        }); // Initial call to set up the player
+        // await player.vehicleConfiguration.changeVehicleConfiguration({
+        //   changes: [
+        //     {
+        //       optionCode: '6MD26_1SM',
+        //       action: 'SELECT',
+        //     },
+        //   ],
+        // }); // Initial call to set up the player
         // loadingOVerlay._restoreInert();
         console.log('Time to experience', (Date.now() - timeStrart)/1000, 'seconds ', lyriqProjectId);
+        window.player = player;
       };
 
       startPlayer();

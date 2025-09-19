@@ -284,19 +284,6 @@ client?.on('initialized', async function () {
       const button = document.createElement('button');
       button.textContent = '3D View';
       button.id = 'view-change-button';
-      // button.style.position = 'fixed';
-      // button.style.bottom = '32px';
-      // button.style.left = '32px';
-      // button.style.zIndex = '10000001';
-      // button.style.padding = '12px 24px';
-      // button.style.fontSize = '18px';
-      // button.style.background = '#282828';
-      // button.style.color = '#fff';
-      // button.style.border = 'solid 2px #282828';
-      // button.style.borderRadius = '8px';
-      // button.style.cursor = 'pointer';
-      // button.style['font-family'] = 'CadillacGothic-Regular, CadillacGothic-NarrowRegular, Arial, NanumSquare, sans-serif';
-      // button.style.transition = 'background-color 0.3s ease-in-out, color 0.3s ease-in-out, opacity 0.5s ease-in-out';
       button.addEventListener('click', async () => {
         console.log('3D View clicked');
         if (player) {
@@ -591,9 +578,9 @@ client?.on('initialized', async function () {
             },
           ],
         }); // Initial call to set up the player
+        window.document.querySelector('#player-container canvas').style.transform = 'scale(1)'; // Slight scale hack to fix initial rendering issue
         // loadingOVerlay._restoreInert();
         console.log('Time to experience', (Date.now() - timeStrart)/1000, 'seconds ', lyriqProjectId);
-        window.player = player;
       };
 
       startPlayer();

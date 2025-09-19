@@ -2,12 +2,41 @@ import { ClientExperiencePlayer } from 'https://a200286d2stmain.blob.core.window
 let timeStrart = Date.now();
 const style = document.createElement('style');
 style.textContent = `
-    #player-container *:not(progress) {
-        width: 100% !important;
-        height: 100% !important;
-        object-fit: cover;
-        transition: none !important;
-}`;
+  #player-container *:not(progress) {
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: cover;
+      transition: none !important;
+  }
+  
+  #player-container *:is(progress) {
+      display: none !important;
+  }
+
+  button#view-change-button {
+  position: fixed;
+  bottom: 32px;
+  left: 32px;
+  z-index: 10000001;
+  padding: 12px 24px;
+  font-size: 18px;
+  background: #282828;
+  color: #fff;
+  border: solid 2px #282828;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: CadillacGothic-Regular, CadillacGothic-NarrowRegular, Arial, NanumSquare, sans-serif;
+  transition: background-color 0.3s ease-in-out,
+              color 0.3s ease-in-out,
+              opacity 0.5s ease-in-out;
+}
+      
+  button#view-change-button:hover {
+      background-color: #fff;
+      color: #222;
+  }
+  `
+  ;
 document.head.appendChild(style);
 
 // === Global Declarations ===
@@ -60,8 +89,7 @@ const rpoChangeFormat = (rpo) => {
 
 const seriesTranslate = (series) => {
   const seriesMap = {
-    '6MH26__1SE': '6MH26__1SE',
-    '6MJ26__1SK': '6MJ26__1SK',
+    '6MD26__1SM': '6MD26_1SM',
   };
   return seriesMap[series] || series;
 };
@@ -255,22 +283,30 @@ client?.on('initialized', async function () {
     function create3DViewButton() {
       const button = document.createElement('button');
       button.textContent = '3D View';
-      button.style.position = 'fixed';
-      button.style.bottom = '32px';
-      button.style.left = '32px';
-      button.style.zIndex = '10000001';
-      button.style.padding = '12px 24px';
-      button.style.fontSize = '18px';
-      button.style.background = '#222';
-      button.style.color = '#fff';
-      button.style.border = 'none';
-      button.style.borderRadius = '8px';
-      button.style.cursor = 'pointer';
-      button.style['font-family'] = 'CadillacGothic-Regular, CadillacGothic-NarrowRegular, Arial, NanumSquare, sans-serif';
+      button.id = 'view-change-button';
+      // button.style.position = 'fixed';
+      // button.style.bottom = '32px';
+      // button.style.left = '32px';
+      // button.style.zIndex = '10000001';
+      // button.style.padding = '12px 24px';
+      // button.style.fontSize = '18px';
+      // button.style.background = '#282828';
+      // button.style.color = '#fff';
+      // button.style.border = 'solid 2px #282828';
+      // button.style.borderRadius = '8px';
+      // button.style.cursor = 'pointer';
+      // button.style['font-family'] = 'CadillacGothic-Regular, CadillacGothic-NarrowRegular, Arial, NanumSquare, sans-serif';
+      // button.style.transition = 'background-color 0.3s ease-in-out, color 0.3s ease-in-out, opacity 0.5s ease-in-out';
       button.addEventListener('click', async () => {
         console.log('3D View clicked');
         if (player) {
+          button.textContent = 'Loading...';
+          button.disabled = true;
           await player.renderExperience('3D');
+          button.style.opacity = '0';
+          setTimeout(() => {
+            button.style.display = 'none';
+          }, 500);
         }
       });
       document.body.appendChild(button);
@@ -327,14 +363,18 @@ client?.on('initialized', async function () {
 
     function fadePlayer(type = 'in') {
       if (!player) return;
-      const element = document.getElementById('player-container');
+      const playerElement = document.getElementById('player-container');
       if (type === 'in') {
-        element.style.visibility = 'visible';
-        element.style.opacity = '1';
+        playerElement.style.visibility = 'visible';
+        playerElement.style.opacity = '1';
+        viewChangebutton.style.visibility = 'visible';
+        viewChangebutton.style.opacity = '1';
       } else {
-        element.style.opacity = '0';
+        playerElement.style.opacity = '0';
+        viewChangebutton.style.opacity = '0';
         setTimeout(() => {
-          element.style.visibility = 'hidden';
+          playerElement.style.visibility = 'hidden';
+          viewChangebutton.style.visibility = 'hidden';
         }, 500);
       }
     }
@@ -543,14 +583,14 @@ client?.on('initialized', async function () {
         console.log('player created');
         await player.renderExperience('2D');
         console.log('experience rendered', player);
-        // await player.vehicleConfiguration.changeVehicleConfiguration({
-        //   changes: [
-        //     {
-        //       optionCode: '6MD26_1SM',
-        //       action: 'SELECT',
-        //     },
-        //   ],
-        // }); // Initial call to set up the player
+        await player.vehicleConfiguration.changeVehicleConfiguration({
+          changes: [
+            {
+              optionCode: '6MD26_1SM',
+              action: 'SELECT',
+            },
+          ],
+        }); // Initial call to set up the player
         // loadingOVerlay._restoreInert();
         console.log('Time to experience', (Date.now() - timeStrart)/1000, 'seconds ', lyriqProjectId);
         window.player = player;

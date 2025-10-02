@@ -277,7 +277,6 @@ client?.on('initialized', async function () {
       });
       document.body.appendChild(container);
       follower = container;
-      viewChangebutton = create3DViewButton();
     }
 
     function create3DViewButton() {
@@ -369,7 +368,7 @@ client?.on('initialized', async function () {
     // === Check for replaced image node and rebind ===
     const imageNodeMonitor = new MutationObserver(() => {
       const newImgNode = document.querySelector(paramsSelector);
-
+      
       if (!newImgNode || newImgNode === currentImgNode) return;
 
       const newSrc = newImgNode?.getAttribute('src');
@@ -404,6 +403,8 @@ client?.on('initialized', async function () {
       }
 
       currentImgNode = newImgNode;
+      window.imageNode= currentImgNode;
+      console.log('Image node changed, re-observing:', currentImgNode);
       observeImageNode(currentImgNode);
     });
 
@@ -573,13 +574,14 @@ client?.on('initialized', async function () {
         await player.vehicleConfiguration.changeVehicleConfiguration({
           changes: [
             {
-              optionCode: '6MD26_1SM',
+              optionCode: '6MK26_1SM',
               action: 'SELECT',
             },
           ],
         }); // Initial call to set up the player
         window.document.querySelector('#player-container canvas').style.transform = 'scale(1)'; // Slight scale hack to fix initial rendering issue
         // loadingOVerlay._restoreInert();
+        viewChangebutton = create3DViewButton();
         console.log('Time to experience', (Date.now() - timeStrart)/1000, 'seconds ', lyriqProjectId);
       };
 

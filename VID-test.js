@@ -49,6 +49,7 @@ let lastURL = '';
 let VedoExperience = null;
 const configurationEngine = null;
 let viewChangebutton = null
+let lastFade = null;
 
 
 const clientSideId = '6780145a1ccd92099bb0fbb8';
@@ -270,7 +271,7 @@ client?.on('initialized', async function () {
       container.id = 'player-container';
       Object.assign(container.style, {
         position: 'fixed',
-        zIndex: '9999999',
+        zIndex: '999',
         transition: 'opacity 0.5s ease-in-out',
         // border: 'red 3px solid',
         backgroundColor: '#ffffff',
@@ -350,17 +351,27 @@ client?.on('initialized', async function () {
       if (!player) return;
       const playerElement = document.getElementById('player-container');
       if (type === 'in') {
-        // playerElement.style.visibility = 'visible';
+        console.log('fade in');
+        lastFade = 'in';
+        playerElement.style.visibility = 'visible';
         playerElement.style.opacity = '1';
-        // viewChangebutton.style.visibility = 'visible';
+        viewChangebutton.style.visibility = 'visible';
         viewChangebutton.style.opacity = '1';
+        playerElement.style.pointerEvents = 'auto';
+        viewChangebutton.style.pointerEvents = 'auto';
+        
       } else {
+        lastFade = 'out';
+        console.log('fade out');
         playerElement.style.opacity = '0';
         viewChangebutton.style.opacity = '0';
-        // setTimeout(() => {
-        //   playerElement.style.visibility = 'hidden';
-        //   viewChangebutton.style.visibility = 'hidden';
-        // }, 500);
+        playerElement.style.pointerEvents = 'none';
+        viewChangebutton.style.pointerEvents = 'none';
+        setTimeout(() => {
+          if(lastFade === 'in') return; // if faded back in, do not hide
+          playerElement.style.visibility = 'hidden';
+          viewChangebutton.style.visibility = 'hidden';
+        }, 500);
       }
     }
 

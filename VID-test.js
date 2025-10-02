@@ -326,8 +326,7 @@ client?.on('initialized', async function () {
 
     // === Target detection and re-observation ===
     function findTarget() {
-      const newTarget =
-        document.querySelector(targetSelectorFull) || document.querySelector(targetSelector);
+      const newTarget = document.querySelector(targetSelector);
       if (newTarget && newTarget !== target) {
         if (resizeObserver) resizeObserver.disconnect();
         target = newTarget;
@@ -351,17 +350,17 @@ client?.on('initialized', async function () {
       if (!player) return;
       const playerElement = document.getElementById('player-container');
       if (type === 'in') {
-        playerElement.style.visibility = 'visible';
+        // playerElement.style.visibility = 'visible';
         playerElement.style.opacity = '1';
-        viewChangebutton.style.visibility = 'visible';
+        // viewChangebutton.style.visibility = 'visible';
         viewChangebutton.style.opacity = '1';
       } else {
         playerElement.style.opacity = '0';
         viewChangebutton.style.opacity = '0';
-        setTimeout(() => {
-          playerElement.style.visibility = 'hidden';
-          viewChangebutton.style.visibility = 'hidden';
-        }, 500);
+        // setTimeout(() => {
+        //   playerElement.style.visibility = 'hidden';
+        //   viewChangebutton.style.visibility = 'hidden';
+        // }, 500);
       }
     }
 
@@ -514,40 +513,6 @@ client?.on('initialized', async function () {
       }
       return params;
     }
-    // function findSeriesDiff(newURL, oldURL)  {
-    //     const params = {};
-    //     const keys = new Set([...newURL.searchParams.keys(), ...oldURL.searchParams.keys()]);
-    //     console.log('keys', keys);
-    //     for (const key of keys) {
-    //         const newValue = newURL.searchParams.get(key);
-    //         console.log('newValue', newValue);
-    //         const oldValue = oldURL.searchParams.get(key);
-    //         console.log('oldValue', oldValue);
-    //         params[key] = key === 'i' ? parseImageParam(newValue) : newValue;
-
-    //         if (newValue !== oldValue) {
-    //             if (key === 'i') {
-    //                 const newImageParams = parseImageParam(newValue);
-    //                 const oldImageParams = parseImageParam(oldValue);
-    //                 params['_diff'] = {
-    //                     [key]: {
-    //                         newValue: newImageParams,
-    //                         oldValue: oldImageParams,
-    //                         diff: imageParamsDiffs(newImageParams, oldImageParams)
-    //                     }
-    //                 };
-    //             } else {
-    //                 params['_diff'] = {
-    //                     [key]: {
-    //                         newValue,
-    //                         oldValue,
-    //                     }
-    //                 };
-    //             }
-    //         }
-    //     }
-    //     return params;
-    // }
 
     const initObserver = new MutationObserver(() => {
       const imgNode = document.querySelector(paramsSelector);
@@ -590,8 +555,8 @@ client?.on('initialized', async function () {
         childList: true,
         subtree: true,
       });
-      window.addEventListener('scroll', syncPosition);
-      window.addEventListener('resize', syncPosition);
+      // window.addEventListener('scroll', syncPosition);
+      // window.addEventListener('resize', syncPosition);
     });
 
     initObserver.observe(document.documentElement, {

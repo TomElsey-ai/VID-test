@@ -1,5 +1,5 @@
 import { ClientExperiencePlayer } from 'https://a200286d2stmain.blob.core.windows.net/frontends/vedo-poc/v3/dist/vedo-experience-player.js';
-let timeStrart = Date.now();
+const timeStrart = Date.now();
 const style = document.createElement('style');
 style.textContent = `
   #player-container *:not(progress) {
@@ -35,8 +35,7 @@ style.textContent = `
       background-color: #fff;
       color: #222;
   }
-  `
-  ;
+  `;
 document.head.appendChild(style);
 
 // === Global Declarations ===
@@ -48,9 +47,8 @@ let currentImgNode = null;
 let lastURL = '';
 let VedoExperience = null;
 const configurationEngine = null;
-let viewChangebutton = null
+let viewChangebutton = null;
 let lastFade = null;
-
 
 const clientSideId = '6780145a1ccd92099bb0fbb8';
 const locale = window.location.pathname.split('/')[1];
@@ -103,11 +101,11 @@ const createLoadingOverlay = () => {
     position: 'fixed',
     top: '0',
     left: '0',
-    width: '100%',    
+    width: '100%',
     height: '100%',
     // backgroundColor: 'rgba(0, 0, 0, 0.5)',
     color: 'white',
-    display: 'flex',  
+    display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     fontSize: '24px',
@@ -115,13 +113,12 @@ const createLoadingOverlay = () => {
   });
 
   document.body.appendChild(overlay);
-//  setInertAllExcept(overlay);
+  //  setInertAllExcept(overlay);
   overlay.textContent = 'Loading 3D Experience...';
   return overlay;
+};
 
-}
-
-const loadingStyle = document.createElement("style");
+const loadingStyle = document.createElement('style');
 loadingStyle.textContent = `
   .loader {
       width: 48px;
@@ -146,7 +143,7 @@ loadingStyle.textContent = `
 document.head.appendChild(loadingStyle);
 
 // const 3Dbutton =
-  
+
 // let prevActive = null;
 // let prevOverflow = '';
 // let inerted = [];
@@ -177,7 +174,7 @@ document.head.appendChild(loadingStyle);
 // }
 function setInertAllExcept(node) {
   // Inert all top-level children of body except the given node
-  [...document.body.children].forEach(el => {
+  [...document.body.children].forEach((el) => {
     if (el !== node && 'inert' in el) {
       el.inert = true;
     }
@@ -199,26 +196,17 @@ function setInertAllExcept(node) {
 
   // Store cleanup function on node for later use
   node._restoreInert = () => {
-    [...document.body.children].forEach(el => {
+    [...document.body.children].forEach((el) => {
       if ('inert' in el) el.inert = false;
     });
     document.documentElement.style.overflow = '';
     document.removeEventListener('click', blockEvent, true);
     document.removeEventListener('mousedown', blockEvent, true);
     document.removeEventListener('touchstart', blockEvent, true);
-    delete node._restoreInert;
+    node._restoreInert = undefined;
     Object.assign(node.style, { display: 'none' });
     node.remove(); // or node.parentNode.removeChild(node);
   };
-
-
-
-  // setTimeout( () => {
-  //   console.log('auto removing overlay');
-  //   node._restoreInert();
-  //   Object.assign(node.style, { display: 'none' });
-  //   // node.remove(); // or node.parentNode.removeChild(node);
-  // }, 15000); // auto-remove after 10 seconds
 }
 
 // Ensure LDClient is defined, waiting if necessary
@@ -241,339 +229,345 @@ let LDClient;
 (async () => {
   LDClient = await getLDClient();
 
-const client = LDClient?.initialize(clientSideId, context);
-console.log('LDClient', LDClient);
-client?.on('initialized', async function () {
-  console.log('SDK successfully initialized!');
-  // const loadingOVerlay = createLoadingOverlay();
-  VedoExperience = await client.variation('vedo_d2c_experience', false);
-  console.log('VedoExperience: ' + VedoExperience);
+  const client = LDClient?.initialize(clientSideId, context);
+  console.log('LDClient', LDClient);
+  client?.on('initialized', async function () {
+    console.log('SDK successfully initialized!');
+    // const loadingOVerlay = createLoadingOverlay();
+    VedoExperience = await client.variation('vedo_d2c_experience', false);
+    console.log(`VedoExperience: ${VedoExperience}`);
 
-  if (VedoExperience) {
-    console.log('VEDO Experience is enabled, initializing...');
-    // ... (rest of your code here, unchanged)
-    // const lyriqProjectId = "8147d2cd-ecd7-4195-bb0c-1a5bfa8cadfc";
-    // const lyriqProjectId = "893b9ec8-fa3d-42a6-8cbd-7e6c6632c513";
-    // const lyriqProjectId = "c670cc78-584e-4e71-b9b9-3bcf0fae12cf";
-    const lyriqVProjectId = "882d52ae-e329-441a-a4fc-cc80dc47c54c";
-    const urlProjectId = new URLSearchParams(window.location.search).get('projectid');
-    console.log('urlProjectId', urlProjectId);
-    const lyriqProjectId = urlProjectId || (model === 'lyriq-v' && lyriqVProjectId) ||'882d52ae-e329-441a-a4fc-cc80dc47c54c';
-    console.log('lyriqProjectId', lyriqProjectId);
-    // const targetSelector = '.transitionGroupSlides';
-    const targetSelector = '#configurator-gallery';
-    const targetSelectorFull = '.swiper';
-    const paramsSelector = '.transitionGroupSlides img';
+    if (VedoExperience) {
+      console.log('VEDO Experience is enabled, initializing...');
+      // ... (rest of your code here, unchanged)
+      // const lyriqProjectId = "8147d2cd-ecd7-4195-bb0c-1a5bfa8cadfc";
+      // const lyriqProjectId = "893b9ec8-fa3d-42a6-8cbd-7e6c6632c513";
+      // const lyriqProjectId = "c670cc78-584e-4e71-b9b9-3bcf0fae12cf";
+      // const lyriqVProjectId = '882d52ae-e329-441a-a4fc-cc80dc47c54c';
+      const lyriqVProjectId = '65cafeea-f6e1-4876-b920-eac725b03a7e';
+      const urlProjectId = new URLSearchParams(window.location.search).get('projectid');
+      console.log('urlProjectId', urlProjectId);
+      const lyriqProjectId =
+        urlProjectId ||
+        (model === 'lyriq-v' && lyriqVProjectId) ||
+        '882d52ae-e329-441a-a4fc-cc80dc47c54c';
+      console.log('lyriqProjectId', lyriqProjectId);
+      // const targetSelector = '.transitionGroupSlides';
+      const targetSelector = '#configurator-gallery';
+      const targetSelectorFull = '.swiper';
+      const paramsSelector = '.transitionGroupSlides img';
 
-    // === Setup the floating VEDO container ===
-    function setUpVEDOContainer() {
-      const container = document.createElement('div');
-      container.id = 'player-container';
-      Object.assign(container.style, {
-        position: 'fixed',
-        zIndex: '999',
-        transition: 'opacity 0.5s ease-in-out',
-        // border: 'red 3px solid',
-        backgroundColor: '#ffffff',
-      });
-      document.body.appendChild(container);
-      follower = container;
-    }
+      // === Setup the floating VEDO container ===
+      function setUpVEDOContainer() {
+        const container = document.createElement('div');
+        container.id = 'player-container';
+        Object.assign(container.style, {
+          position: 'fixed',
+          zIndex: '999',
+          transition: 'opacity 0.5s ease-in-out',
+          // border: 'red 3px solid',
+          backgroundColor: '#ffffff',
+        });
+        document.body.appendChild(container);
+        follower = container;
+      }
 
-    function create3DViewButton() {
-      const button = document.createElement('button');
-      button.textContent = '3D View';
-      button.id = 'view-change-button';
-      button.addEventListener('click', async () => {
-        console.log('3D View clicked');
-        if (player) {
-          button.textContent = 'Loading...';
-          button.disabled = true;
-          await player.renderExperience('3D');
-          button.style.opacity = '0';
+      function create3DViewButton() {
+        const button = document.createElement('button');
+        button.textContent = '3D View';
+        button.id = 'view-change-button';
+        button.addEventListener('click', async () => {
+          console.log('3D View clicked');
+          if (player) {
+            button.textContent = 'Loading...';
+            button.disabled = true;
+            await player.renderExperience('3D');
+            button.style.opacity = '0';
+            setTimeout(() => {
+              button.style.display = 'none';
+            }, 500);
+          }
+        });
+        document.body.appendChild(button);
+        return button;
+      }
+
+      // === Sync follower VEDO container to target position and size ===
+      function syncPosition() {
+        if (!target || !follower) return;
+        const rect = target.getBoundingClientRect();
+        const style = window.getComputedStyle(target);
+        Object.assign(follower.style, {
+          top: `calc(${rect.top}px + ${style.paddingTop})`,
+          left: `calc(${rect.left}px + ${style.paddingLeft})`,
+          width: `calc(${rect.width}px - ${style.paddingLeft} - ${style.paddingRight})`,
+          height: `calc(${rect.height}px - ${style.paddingTop} - ${style.paddingBottom})`,
+        });
+        // console.log('syncPosition', { rect, style, follower });
+        // if (viewChangebutton) {
+        //   Object.assign(viewChangebutton.style, {
+        //     bottom: `${rect.bottom}px`,
+        //     left: `${rect.left}px`,
+        //   });
+
+        // }
+      }
+
+      window.addEventListener('scroll', syncPosition);
+
+      // === Target detection and re-observation ===
+      function findTarget() {
+        const newTarget = document.querySelector(targetSelector);
+        if (newTarget && newTarget !== target) {
+          if (resizeObserver) resizeObserver.disconnect();
+          target = newTarget;
+          resizeObserver = new ResizeObserver(() => syncPosition());
+          resizeObserver.observe(target);
+          syncPosition();
+        }
+      }
+
+      // === Frame-synced animation loop for real-time updates ===
+      function animationLoop() {
+        if (!target || !document.body.contains(target)) {
+          target = null;
+          findTarget();
+        }
+        syncPosition();
+        requestAnimationFrame(animationLoop);
+      }
+
+      function fadePlayer(type = 'in') {
+        if (!player) return;
+        const playerElement = document.getElementById('player-container');
+        if (type === 'in') {
+          console.log('fade in');
+          lastFade = 'in';
+          playerElement.style.visibility = 'visible';
+          playerElement.style.opacity = '1';
+          viewChangebutton.style.visibility = 'visible';
+          viewChangebutton.style.opacity = '1';
+          playerElement.style.pointerEvents = 'auto';
+          viewChangebutton.style.pointerEvents = 'auto';
+        } else {
+          lastFade = 'out';
+          console.log('fade out');
+          playerElement.style.opacity = '0';
+          viewChangebutton.style.opacity = '0';
+          playerElement.style.pointerEvents = 'none';
+          viewChangebutton.style.pointerEvents = 'none';
           setTimeout(() => {
-            button.style.display = 'none';
+            if (lastFade === 'in') return; // if faded back in, do not hide
+            playerElement.style.visibility = 'hidden';
+            viewChangebutton.style.visibility = 'hidden';
           }, 500);
         }
-      });
-      document.body.appendChild(button);
-      return button;
-    }
-
-    
-
-    // === Sync follower VEDO container to target position and size ===
-    function syncPosition() {
-      if (!target || !follower) return;
-      const rect = target.getBoundingClientRect();
-      const style = window.getComputedStyle(target);
-      Object.assign(follower.style, {
-        top: `calc(${rect.top}px + ${style.paddingTop})`,
-        left: `calc(${rect.left}px + ${style.paddingLeft})`,
-        width: `calc(${rect.width}px - ${style.paddingLeft} - ${style.paddingRight})`,
-        height: `calc(${rect.height}px - ${style.paddingTop} - ${style.paddingBottom})`,
-      });
-      // console.log('syncPosition', { rect, style, follower });
-      // if (viewChangebutton) {
-      //   Object.assign(viewChangebutton.style, {
-      //     bottom: `${rect.bottom}px`,
-      //     left: `${rect.left}px`,
-      //   });
-
-      // }
-    }
-
-    window.addEventListener('scroll', syncPosition);
-
-    // === Target detection and re-observation ===
-    function findTarget() {
-      const newTarget = document.querySelector(targetSelector);
-      if (newTarget && newTarget !== target) {
-        if (resizeObserver) resizeObserver.disconnect();
-        target = newTarget;
-        resizeObserver = new ResizeObserver(() => syncPosition());
-        resizeObserver.observe(target);
-        syncPosition();
-      }
-    }
-
-    // === Frame-synced animation loop for real-time updates ===
-    function animationLoop() {
-      if (!target || !document.body.contains(target)) {
-        target = null;
-        findTarget();
-      }
-      syncPosition();
-      requestAnimationFrame(animationLoop);
-    }
-
-    function fadePlayer(type = 'in') {
-      if (!player) return;
-      const playerElement = document.getElementById('player-container');
-      if (type === 'in') {
-        console.log('fade in');
-        lastFade = 'in';
-        playerElement.style.visibility = 'visible';
-        playerElement.style.opacity = '1';
-        viewChangebutton.style.visibility = 'visible';
-        viewChangebutton.style.opacity = '1';
-        playerElement.style.pointerEvents = 'auto';
-        viewChangebutton.style.pointerEvents = 'auto';
-        
-      } else {
-        lastFade = 'out';
-        console.log('fade out');
-        playerElement.style.opacity = '0';
-        viewChangebutton.style.opacity = '0';
-        playerElement.style.pointerEvents = 'none';
-        viewChangebutton.style.pointerEvents = 'none';
-        setTimeout(() => {
-          if(lastFade === 'in') return; // if faded back in, do not hide
-          playerElement.style.visibility = 'hidden';
-          viewChangebutton.style.visibility = 'hidden';
-        }, 500);
-      }
-    }
-
-    // === Check for replaced image node and rebind ===
-    const imageNodeMonitor = new MutationObserver(() => {
-      const newImgNode = document.querySelector(paramsSelector);
-      
-      if (!newImgNode || newImgNode === currentImgNode) return;
-
-      const newSrc = newImgNode?.getAttribute('src');
-      const oldSrc = currentImgNode?.getAttribute('src') || '';
-
-      if (newSrc && oldSrc && newSrc !== oldSrc) {
-        const newURL = new URL(newSrc);
-        console.log('newURL', newURL);
-        if (newURL.href.includes('interior')) {
-          console.log('interior image');
-          fadePlayer('out');
-        } else if (newURL.href.includes('exterior')) {
-          console.log('exterior image');
-          fadePlayer('in');
-        }
-        const oldURL = new URL(oldSrc);
-        const params = findParamDiffs(newURL, oldURL);
-
-        console.log('params fire', { params });
-
-        const diff = params._diff?.i?.diff?.rpos;
-        if (params._diff?.i?.diff?.series) {
-          diff?.unshift(params._diff?.i?.diff?.series);
-        }
-        console.log('diff', diff);
-        if (diff && player && diff.length > 0) {
-          // player.configurationEngine.changeOptionSelection('', diff);
-          const changeArray = diff.map((r) => rpoChangeFormat(r));
-          console.log('changeArray', changeArray);
-          player.vehicleConfiguration.changeVehicleConfiguration({ changes: changeArray });
-        }
       }
 
-      currentImgNode = newImgNode;
-      window.imageNode= currentImgNode;
-      console.log('Image node changed, re-observing:', currentImgNode);
-      observeImageNode(currentImgNode);
-    });
+      // === Check for replaced image node and rebind ===
+      const imageNodeMonitor = new MutationObserver(() => {
+        const newImgNode = document.querySelector(paramsSelector);
 
-    // === Observe mutation on current image node ===
-    let imageMutationObserver = null;
-    function observeImageNode(node) {
-      if (!node) return;
-      if (imageMutationObserver) imageMutationObserver.disconnect();
+        if (!newImgNode || newImgNode === currentImgNode) return;
 
-      imageMutationObserver = new MutationObserver((mutationList) => {
-        for (const mutation of mutationList) {
-          if (mutation.attributeName === 'src') {
-            console.log('mutation', mutation);
-            const newSrc = node.getAttribute('highresolutionurl');
-            const oldSrc = node.getAttribute('data-loaded-src');
+        const newSrc = newImgNode?.getAttribute('src');
+        const oldSrc = currentImgNode?.getAttribute('src') || '';
 
-            if (!newSrc || !oldSrc || newSrc === lastURL) return;
-            lastURL = newSrc;
+        if (newSrc && oldSrc && newSrc !== oldSrc) {
+          const newURL = new URL(newSrc);
+          console.log('newURL', newURL);
+          if (newURL.href.includes('interior')) {
+            console.log('interior image');
+            fadePlayer('out');
+          } else if (newURL.href.includes('exterior')) {
+            console.log('exterior image');
+            fadePlayer('in');
+          }
+          const oldURL = new URL(oldSrc);
+          const params = findParamDiffs(newURL, oldURL);
 
-            const newURL = new URL(newSrc);
-            const oldURL = new URL(oldSrc);
-            const params = findParamDiffs(newURL, oldURL);
+          console.log('params fire', { params });
 
-            console.log('params', params);
-
-            const diff = params._diff?.i?.diff?.rpos;
-            if (params._diff?.i?.diff?.series) {
-              diff?.unshift(params._diff?.i?.diff?.series);
-            }
-            console.log('diff', diff);
-            if (diff && player && diff.length > 0) {
-              console.log('player true', diff);
-              // player.configurationEngine.changeOptionSelection('', diff);
-              const changeArray = diff.map((r) => rpoChangeFormat(r));
-              console.log('changeArray', changeArray);
-              player.vehicleConfiguration.changeVehicleConfiguration({ changes: changeArray });
-            }
+          const diff = params._diff?.i?.diff?.rpos;
+          if (params._diff?.i?.diff?.series) {
+            diff?.unshift(params._diff?.i?.diff?.series);
+          }
+          console.log('diff', diff);
+          if (diff && player && diff.length > 0) {
+            // player.configurationEngine.changeOptionSelection('', diff);
+            const changeArray = diff.map((r) => rpoChangeFormat(r));
+            console.log('changeArray', changeArray);
+            player.vehicleConfiguration.changeVehicleConfiguration({ changes: changeArray });
           }
         }
+
+        currentImgNode = newImgNode;
+        window.imageNode = currentImgNode;
+        console.log('Image node changed, re-observing:', currentImgNode);
+        observeImageNode(currentImgNode);
       });
 
-      imageMutationObserver.observe(node, { attributes: true });
-    }
+      // === Observe mutation on current image node ===
+      let imageMutationObserver = null;
+      function observeImageNode(node) {
+        if (!node) return;
+        if (imageMutationObserver) imageMutationObserver.disconnect();
 
-    // === Image Param Parsing and Diffing ===
-    function parseImageParam(value) {
-      const sections = value.split('.')[0].split('/');
-      console.log('sections', sections);
-      const series = sections[2];
-      console.log('series', series);
-      const last = sections[3].split('gmds');
+        imageMutationObserver = new MutationObserver((mutationList) => {
+          for (const mutation of mutationList) {
+            if (mutation.attributeName === 'src') {
+              console.log('mutation', mutation);
+              const newSrc = node.getAttribute('highresolutionurl');
+              const oldSrc = node.getAttribute('data-loaded-src');
 
-      return {
-        modelYear: sections[0],
-        model: sections[1],
-        series,
-        trim: series.split('__')[1],
-        rpos: last[0].split('_'),
-        resolution: `gmds${last[1]}`,
-      };
-    }
+              if (!newSrc || !oldSrc || newSrc === lastURL) return;
+              lastURL = newSrc;
 
-    function imageParamsDiffs(a, b) {
-      const result = {};
-      for (const [key, aValue] of Object.entries(a)) {
-        const bValue = b[key];
-        if (key === 'rpos') {
-          const aSet = new Set(aValue);
-          const bSet = new Set(bValue);
-          result[key] = [...aSet].filter((x) => !bSet.has(x));
-        } else if (aValue !== bValue) {
-          result[key] = aValue;
-        }
-      }
-      return result;
-    }
+              const newURL = new URL(newSrc);
+              const oldURL = new URL(oldSrc);
+              const params = findParamDiffs(newURL, oldURL);
 
-    function findParamDiffs(newURL, oldURL) {
-      const params = {};
-      const keys = new Set([...newURL.searchParams.keys(), ...oldURL.searchParams.keys()]);
+              console.log('params', params);
 
-      for (const key of keys) {
-        const newValue = newURL.searchParams.get(key);
-        const oldValue = oldURL.searchParams.get(key);
-        params[key] = key === 'i' ? parseImageParam(newValue) : newValue;
-
-        if (newValue !== oldValue) {
-          if (key === 'i') {
-            const newImageParams = parseImageParam(newValue);
-            const oldImageParams = parseImageParam(oldValue);
-            params._diff = {
-              [key]: {
-                newValue: newImageParams,
-                oldValue: oldImageParams,
-                diff: imageParamsDiffs(newImageParams, oldImageParams),
-              },
-            };
-          } else {
-            params._diff = {
-              [key]: {
-                newValue,
-                oldValue,
-              },
-            };
+              const diff = params._diff?.i?.diff?.rpos;
+              if (params._diff?.i?.diff?.series) {
+                diff?.unshift(params._diff?.i?.diff?.series);
+              }
+              console.log('diff', diff);
+              if (diff && player && diff.length > 0) {
+                console.log('player true', diff);
+                // player.configurationEngine.changeOptionSelection('', diff);
+                const changeArray = diff.map((r) => rpoChangeFormat(r));
+                console.log('changeArray', changeArray);
+                player.vehicleConfiguration.changeVehicleConfiguration({ changes: changeArray });
+              }
+            }
           }
-        }
-      }
-      return params;
-    }
-
-    const initObserver = new MutationObserver(() => {
-      const imgNode = document.querySelector(paramsSelector);
-      if (!imgNode) return;
-
-      initObserver.disconnect();
-      console.log('****** Initial image found. Setting up VEDO...');
-
-      currentImgNode = imgNode;
-      observeImageNode(currentImgNode);
-
-      setUpVEDOContainer();
-      findTarget();
-      animationLoop();
-
-      const startPlayer = async () => {
-        console.log('clientexperienceplayer', ClientExperiencePlayer);
-        player = await ClientExperiencePlayer.create(lyriqProjectId, follower, {
-          baseUrl: 'https://vedo.apps.gmna.dev.krypton.atmosdt.gm.com/delivery',
         });
-        console.log('player created');
-        await player.renderExperience('2D');
-        console.log('experience rendered', player);
-        await player.vehicleConfiguration.changeVehicleConfiguration({
-          changes: [
-            {
-              optionCode: '6MK26_1SM',
-              action: 'SELECT',
-            },
-          ],
-        }); // Initial call to set up the player
-        window.document.querySelector('#player-container canvas').style.transform = 'scale(1)'; // Slight scale hack to fix initial rendering issue
-        // loadingOVerlay._restoreInert();
-        viewChangebutton = create3DViewButton();
-        console.log('Time to experience', (Date.now() - timeStrart)/1000, 'seconds ', lyriqProjectId);
-      };
 
-      startPlayer();
-      imageNodeMonitor.observe(document.body, {
+        imageMutationObserver.observe(node, { attributes: true });
+      }
+
+      // === Image Param Parsing and Diffing ===
+      function parseImageParam(value) {
+        const sections = value.split('.')[0].split('/');
+        console.log('sections', sections);
+        const series = sections[2];
+        console.log('series', series);
+        const last = sections[3].split('gmds');
+
+        return {
+          modelYear: sections[0],
+          model: sections[1],
+          series,
+          trim: series.split('__')[1],
+          rpos: last[0].split('_'),
+          resolution: `gmds${last[1]}`,
+        };
+      }
+
+      function imageParamsDiffs(a, b) {
+        const result = {};
+        for (const [key, aValue] of Object.entries(a)) {
+          const bValue = b[key];
+          if (key === 'rpos') {
+            const aSet = new Set(aValue);
+            const bSet = new Set(bValue);
+            result[key] = [...aSet].filter((x) => !bSet.has(x));
+          } else if (aValue !== bValue) {
+            result[key] = aValue;
+          }
+        }
+        return result;
+      }
+
+      function findParamDiffs(newURL, oldURL) {
+        const params = {};
+        const keys = new Set([...newURL.searchParams.keys(), ...oldURL.searchParams.keys()]);
+
+        for (const key of keys) {
+          const newValue = newURL.searchParams.get(key);
+          const oldValue = oldURL.searchParams.get(key);
+          params[key] = key === 'i' ? parseImageParam(newValue) : newValue;
+
+          if (newValue !== oldValue) {
+            if (key === 'i') {
+              const newImageParams = parseImageParam(newValue);
+              const oldImageParams = parseImageParam(oldValue);
+              params._diff = {
+                [key]: {
+                  newValue: newImageParams,
+                  oldValue: oldImageParams,
+                  diff: imageParamsDiffs(newImageParams, oldImageParams),
+                },
+              };
+            } else {
+              params._diff = {
+                [key]: {
+                  newValue,
+                  oldValue,
+                },
+              };
+            }
+          }
+        }
+        return params;
+      }
+
+      const initObserver = new MutationObserver(() => {
+        const imgNode = document.querySelector(paramsSelector);
+        if (!imgNode) return;
+
+        initObserver.disconnect();
+        console.log('****** Initial image found. Setting up VEDO...');
+
+        currentImgNode = imgNode;
+        observeImageNode(currentImgNode);
+
+        setUpVEDOContainer();
+        findTarget();
+        animationLoop();
+
+        const startPlayer = async () => {
+          console.log('clientexperienceplayer', ClientExperiencePlayer);
+          player = await ClientExperiencePlayer.create(lyriqProjectId, follower, {
+            baseUrl: 'https://vedo.apps.gmna.dev.krypton.atmosdt.gm.com/delivery',
+          });
+          console.log('player created');
+          await player.renderExperience('2D');
+          console.log('experience rendered', player);
+          await player.vehicleConfiguration.changeVehicleConfiguration({
+            changes: [
+              {
+                optionCode: '6MK26_1SM',
+                action: 'SELECT',
+              },
+            ],
+          }); // Initial call to set up the player
+          window.document.querySelector('#player-container canvas').style.transform = 'scale(1)'; // Slight scale hack to fix initial rendering issue
+          // loadingOVerlay._restoreInert();
+          viewChangebutton = create3DViewButton();
+          console.log(
+            'Time to experience',
+            (Date.now() - timeStrart) / 1000,
+            'seconds ',
+            lyriqProjectId,
+          );
+        };
+
+        startPlayer();
+        imageNodeMonitor.observe(document.body, {
+          childList: true,
+          subtree: true,
+        });
+        // window.addEventListener('scroll', syncPosition);
+        // window.addEventListener('resize', syncPosition);
+      });
+
+      initObserver.observe(document.documentElement, {
         childList: true,
         subtree: true,
       });
-      // window.addEventListener('scroll', syncPosition);
-      // window.addEventListener('resize', syncPosition);
-    });
-
-    initObserver.observe(document.documentElement, {
-      childList: true,
-      subtree: true,
-    });
-  }
-});
+    }
+  });
 })();

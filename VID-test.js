@@ -243,8 +243,7 @@ let LDClient;
       // const lyriqProjectId = "8147d2cd-ecd7-4195-bb0c-1a5bfa8cadfc";
       // const lyriqProjectId = "893b9ec8-fa3d-42a6-8cbd-7e6c6632c513";
       // const lyriqProjectId = "c670cc78-584e-4e71-b9b9-3bcf0fae12cf";
-      // const lyriqVProjectId = '882d52ae-e329-441a-a4fc-cc80dc47c54c';
-      const lyriqVProjectId = '65cafeea-f6e1-4876-b920-eac725b03a7e';
+      const lyriqVProjectId = '882d52ae-e329-441a-a4fc-cc80dc47c54c';
       const urlProjectId = new URLSearchParams(window.location.search).get('projectid');
       console.log('urlProjectId', urlProjectId);
       const lyriqProjectId =
@@ -378,9 +377,9 @@ let LDClient;
           console.log('newURL', newURL);
           if (newURL.href.includes('interior')) {
             console.log('interior image');
-            fadePlayer('out');
+            fadePlayer('out', newURL);
           } else if (newURL.href.includes('exterior')) {
-            console.log('exterior image');
+            console.log('exterior image', newURL);
             fadePlayer('in');
           }
           const oldURL = new URL(oldSrc);
